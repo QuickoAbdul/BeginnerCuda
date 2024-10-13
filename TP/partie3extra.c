@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <windows.h>
 #include <math.h>
 
 // Fonction pour effectuer l'addition séquentielle des tableaux
@@ -43,6 +43,16 @@ double stddev(double *times, int n, double mean)
     return sqrt(sum / n);
 }
 
+// Fonction pour obtenir le temps actuel
+double getCurrentTime()
+{
+    LARGE_INTEGER frequency;
+    LARGE_INTEGER currentTime;
+    QueryPerformanceFrequency(&frequency);                    // Récupérer la fréquence
+    QueryPerformanceCounter(&currentTime);                    // Récupérer le compteur
+    return (double)currentTime.QuadPart / frequency.QuadPart; // Temps en secondes
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -55,9 +65,12 @@ int main(int argc, char *argv[])
 
     if (numExecutions < 1)
     {
-        printf("Veuillez entrer un entier positif pour le nombre d'exécutions.\n");
+        printf("Veuillez entrer un entier positif pour le nombre d'executions.\n");
         return 1;
     }
+
+    // Initialiser le générateur de nombres aléatoires
+    srand(time(NULL));
 
     // Définir la plage des tailles de tableau
     int sizes[] = {16, 32, 64, 128, 256, 512, 1024, 2024};
@@ -76,12 +89,10 @@ int main(int argc, char *argv[])
 
         if (array1 == NULL || array2 == NULL || resultArray == NULL)
         {
-            printf("Échec de l'allocation de mémoire !\n");
+            printf("Echec de l'allocation de memoire !\n");
             return 1;
         }
 
-        // Initialiser le générateur de nombres aléatoires
-        srand(time(NULL));
         initializeArray(array1, size);
         initializeArray(array2, size);
 
@@ -91,14 +102,14 @@ int main(int argc, char *argv[])
         // Exécuter la fonction d'addition plusieurs fois et mesurer les temps
         for (int exec = 0; exec < numExecutions; exec++)
         {
-            clock_t start = clock();
+            double start = getCurrentTime();
 
             // Addition des tableaux
             addArrays(array1, array2, resultArray, size);
 
-            clock_t end = clock();
-            executionTimes[exec] = ((double)(end - start)) / CLOCKS_PER_SEC; // Temps en secondes
-            printf("Exécution %d - Temps d'exécution : %f secondes\n", exec + 1, executionTimes[exec]);
+            double end = getCurrentTime();
+            executionTimes[exec] = end - start; // Temps en secondes
+            printf("Execution %d - Temps d'execution : %.10f secondes\n", exec + 1, executionTimes[exec]);
         }
 
         // Calcul de la moyenne et de l'écart-type des temps d'exécution
@@ -106,8 +117,8 @@ int main(int argc, char *argv[])
         double stddevTime = stddev(executionTimes, numExecutions, meanTime);
 
         // Affichage des résultats
-        printf("Moyenne du temps d'exécution : %f secondes\n", meanTime);
-        printf("Écart-type du temps d'exécution : %f secondes\n", stddevTime);
+        printf("Moyenne du temps d'execution : %.10f secondes\n", meanTime);
+        printf("Ecart-type du temps d'execution : %.10f secondes\n", stddevTime);
 
         // Libérer la mémoire allouée
         free(array1);

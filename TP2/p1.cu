@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
     if (numExecutions < 1)
     {
-        printf("Veuillez entrer un entier positif pour le nombre d'exécutions.\n");
+        printf("Veuillez entrer un entier positif pour le nombre d'executions.\n");
         return 1;
     }
 
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 
         if (array1 == NULL || array2 == NULL || resultArray == NULL)
         {
-            printf("Échec de l'allocation de mémoire !\n");
+            printf("Echec de l'allocation de memoire !\n");
             return 1;
         }
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
             float execTime;
             cudaEventElapsedTime(&execTime, start, stop); // Temps en millisecondes
             execTimes[exec] = execTime / 1000.0;          // Convertir en secondes
-            printf("Exécution %d - Temps d'exécution (CUDA) : %f secondes\n", exec + 1, execTimes[exec]);
+            printf("Execution %d - Temps d'execution (CUDA) : %.10f secondes\n", exec + 1, execTimes[exec]);
 
             // Copier le résultat du GPU vers l'hôte
             cudaMemcpy(resultArray, d_resultArray, size * sizeof(int), cudaMemcpyDeviceToHost);
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
         // Calculer et afficher la moyenne et l'écart-type des temps d'exécution
         double avgTime = mean(execTimes, numExecutions);
         double stddevTime = stddev(execTimes, numExecutions, avgTime);
-        printf("Temps moyen : %f secondes, Ecart-type : %f secondes\n", avgTime, stddevTime);
+        printf("Temps moyen : %.10f secondes, Ecart-type : %.10f secondes\n", avgTime, stddevTime);
 
         // Libérer la mémoire GPU et hôte
         cudaFree(d_array1);

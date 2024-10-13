@@ -59,11 +59,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Définir la plage des tailles de tableau
+    // Définir la plage des tailles de tableau selon une échelle logarithmique (base 2)
     int sizes[] = {16, 32, 64, 128, 256, 512, 1024, 2024};
     int numSizes = sizeof(sizes) / sizeof(sizes[0]);
 
-    // Boucle à travers les tailles de tableau
     for (int s = 0; s < numSizes; s++)
     {
         int size = sizes[s];
@@ -89,7 +88,7 @@ int main(int argc, char *argv[])
         double *executionTimes = (double *)malloc(numExecutions * sizeof(double));
 
         // Exécuter la fonction d'addition plusieurs fois et mesurer les temps
-        for (int exec = 0; exec < numExecutions; exec++)
+        for (int i = 0; i < numExecutions; i++)
         {
             clock_t start = clock();
 
@@ -97,8 +96,7 @@ int main(int argc, char *argv[])
             addArrays(array1, array2, resultArray, size);
 
             clock_t end = clock();
-            executionTimes[exec] = ((double)(end - start)) / CLOCKS_PER_SEC; // Temps en secondes
-            printf("Exécution %d - Temps d'exécution : %f secondes\n", exec + 1, executionTimes[exec]);
+            executionTimes[i] = ((double)(end - start)) / CLOCKS_PER_SEC; // Temps en secondes
         }
 
         // Calcul de la moyenne et de l'écart-type des temps d'exécution
@@ -106,8 +104,8 @@ int main(int argc, char *argv[])
         double stddevTime = stddev(executionTimes, numExecutions, meanTime);
 
         // Affichage des résultats
-        printf("Moyenne du temps d'exécution : %f secondes\n", meanTime);
-        printf("Écart-type du temps d'exécution : %f secondes\n", stddevTime);
+        printf("Moyenne du temps d'exécution: %f secondes\n", meanTime);
+        printf("Écart-type du temps d'exécution: %f secondes\n", stddevTime);
 
         // Libérer la mémoire allouée
         free(array1);
