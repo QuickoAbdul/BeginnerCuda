@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
             int blocksPerGrid = (size + threadsPerBlock - 1) / threadsPerBlock;
 
             cudaEventRecord(start);
-            addArrays<<<blocksPerGrid, threadsPerBlock>>>(d_array1, d_array2, d_resultArray, size);
+            addArrays<<<1, 1>>>(d_array1, d_array2, d_resultArray, size);
             cudaEventRecord(stop);
 
             cudaEventSynchronize(stop);
